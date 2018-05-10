@@ -1,0 +1,107 @@
+<style>
+    /* This is my error handler to show myself and users when errors are happening */
+    /* See: https://gist.github.com/ubershmekel/66abb3987b116b4824201f9cd72e1dd9 /*
+    /* style from http://www.w3schools.com/howto/howto_js_snackbar.asp */
+    /* The snackbar - position it at the bottom and in the middle of the screen */
+    #snackAlertsContainer {
+        position: fixed; /* Sit on top of the screen */
+        z-index: 1; /* Add a z-index if needed */
+        bottom: 30px; /* 30px from the bottom */
+        width: 100%;
+    }
+    .snackAlert {
+        visibility: hidden; /* Hidden by default. Visible on click */
+        margin: auto;
+        width: 50%;
+        min-width: 250px; /* Set a default minimum width */
+        margin-bottom: 16px;
+        background-color: #933; /* Black background color */
+        color: #fff; /* White text color */
+        text-align: center; /* Centered text */
+        border-radius: 2px;
+        padding: 16px;
+    }
+
+    /* Show the snackbar when clicking on a button (class added with JavaScript) */
+    .snackAlert.show {
+        visibility: visible; /* Show the snackbar */
+
+    /* Add animation: Take 0.5 seconds to fade in and out the snackbar. 
+    However, delay the fade out process for 2.5 seconds */
+        -webkit-animation: fadein 1.5s, fadeout 2.5s 2.5s;
+        animation: fadein 1.5s, fadeout 2.5s 2.5s;
+    }
+
+    /* Animations to fade the snackbar in and out */
+    @-webkit-keyframes fadein {
+        from {bottom: 0; opacity: 0;} 
+        to {bottom: 30px; opacity: 1;}
+    }
+
+    @keyframes fadein {
+        from {bottom: 0; opacity: 0;}
+        to {bottom: 30px; opacity: 1;}
+    }
+
+    @-webkit-keyframes fadeout {
+        from {bottom: 30px; opacity: 1;} 
+        to {bottom: 0; opacity: 0;}
+    }
+
+    @keyframes fadeout {
+        from {bottom: 30px; opacity: 1;}
+        to {bottom: 0; opacity: 0;}
+    }
+</style>
+<script>
+    function showAlert(message) {
+        if(!document.body) {
+            // toasts don't work before the body exists, so we postpone the toast.
+            setTimeout(function() { showAlert(message); }, 200);
+            return;
+        };
+        var containerId = 'snackAlertsContainer';
+        var containerElem = document.getElementById(containerId);
+        if(!containerElem) {
+            // We need a container so alerts don't overlap
+            var containerElem = document.createElement("div");
+            containerElem.id = containerId;
+            document.body.appendChild(containerElem);
+        }
+        // Get the snackbar DIV
+        var elem = document.createElement("div");
+        elem.innerHTML = message;
+        // Add the "show" class to DIV
+        elem.className = "snackAlert show";
+        // After a delay, remove the show class from DIV
+        // Make sure this delay fits the css transition duration
+        var eraseElementDelay = 5000;
+        setTimeout(function() {
+            elem.className = elem.className.replace("show", "");
+        }, eraseElementDelay);
+        containerElem.appendChild(elem);
+    }
+
+    window.onerror = function(msg, url, linenumber) {
+        // Tell users when errors occur and log on google analytics
+        // This is useful to see syntax errors in loaded scripts.
+        // http://stackoverflow.com/questions/2604976/javascript-how-to-display-script-errors-in-a-popup-alert/2604997#2604997
+        showAlert("Surprising error, tweet it @ubershmekel: " + msg)
+        /*
+        // Use this to report errors on google analytics
+        // but don't forget to add a protection against `ga` being undefined
+        var errDetails = msg + '\nURL: ' + url + '\nLine Number: '+ linenumber;
+        ga('send', 'exception', {
+            'exDescription': errDetails,
+            'exFatal': false
+        });*/
+        // report on dev console too
+        return false;
+    }
+
+    window.addEventListener("unhandledrejection", function(event) { 
+        // Handle unhandled promises, these should probably just throw, yet here we are.
+        showAlert('Broken promise, tweet it @ubershmekel: ' + event.reason);
+        //throw 'broken promise: ' + event.reason
+    });
+</script>
