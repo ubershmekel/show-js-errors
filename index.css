@@ -48,7 +48,7 @@ table {
 }
 
 /*********************/
-/* End normalize.css */
+/* End css reset */
 /*********************/
 
 
@@ -65,7 +65,7 @@ body {
     margin: 2em auto;
     max-width: 800px;
     padding: 1em;
-    line-height: 2;
+    line-height: 1.5;
     text-align: justify
 }
 
@@ -75,7 +75,7 @@ ul li {
 }
 
 button {
-    line-height: 2em;
+    line-height: 1.5em;
     /*
     background-color: rgb(88, 88, 255);
     color: #fff;
@@ -93,8 +93,10 @@ h1 {
 h2 {
     color: #555;
     font-size: 2em;
+    margin-top: 1em;
 }
 
 h3 {
     color: #777;
+    margin-top: 1em;
 }
