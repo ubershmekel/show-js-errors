@@ -3,6 +3,18 @@
 <head>
     <title>Show Javascript Errors To Users</title>
 
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-4533496-22"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-4533496-22');
+    </script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
     <!-- start the snippet -->
     <style>
         /* This is my error handler to show myself and users when errors are happening */
@@ -162,7 +174,7 @@
     <h3>How?</h3>
     <ul>
         <li>
-            <a href="">Paste this</a> into your &lt;head&gt;
+            <a href="https://raw.githubusercontent.com/ubershmekel/show-js-errors/gh-pages/snippet.html">Paste this</a> into your &lt;head&gt;
         </li>
     </ul>
 
@@ -185,6 +197,14 @@
             <button onclick="Promise.reject(new Error('woops'));">Try out a promise rejection</button>
         </li>
     </ul>
+
+    <h3>This is suboptimal</h3>
+    <ul>
+        <li>
+            Please <a href="https://github.com/ubershmekel/show-js-errors">open an issue or pull request on github</a>.
+        </li>
+    </ul>
+
 </body>
 
 </html>

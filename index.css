@@ -75,13 +75,14 @@ ul li {
 }
 
 button {
+    line-height: 2em;
     /*
     background-color: rgb(88, 88, 255);
     color: #fff;
     padding: 0.5em 1em;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
     border-radius: 45px;
-*/
+    */
 }
 
 h1 {
