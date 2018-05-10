@@ -6,111 +6,22 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-4533496-22"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-    gtag('config', 'UA-4533496-22');
+        gtag('config', 'UA-4533496-22');
     </script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
     <!-- start the snippet -->
-    <style>
-        /* This is my error handler to show myself and users when errors are happening */
-
-        /* See: https://gist.github.com/ubershmekel/66abb3987b116b4824201f9cd72e1dd9 /*
-                /* style from http://www.w3schools.com/howto/howto_js_snackbar.asp */
-
-        /* The snackbar - position it at the bottom and in the middle of the screen */
-
-        #snackAlertsContainer {
-            position: fixed;
-            /* Sit on top of the screen */
-            z-index: 1;
-            /* Add a z-index if needed */
-            bottom: 30px;
-            /* 30px from the bottom */
-            width: 100%;
-        }
-
-        .snackAlert {
-            display: none;
-            /* Hidden by default. Visible on click */
-            margin: auto;
-            width: 50%;
-            min-width: 250px;
-            /* Set a default minimum width */
-            margin-bottom: 16px;
-            background-color: #933;
-            /* Black background color */
-            color: #fff;
-            /* White text color */
-            text-align: center;
-            /* Centered text */
-            border-radius: 2px;
-            padding: 16px;
-        }
-
-        /* Show the snackbar when clicking on a button (class added with JavaScript) */
-
-        .snackAlert.show {
-            display: block;
-            /* Show the snackbar */
-            /* Add animation: Take 0.5 seconds to fade in and out the snackbar. 
-                However, delay the fade out process for 2.5 seconds */
-            -webkit-animation: fadein 1.5s, fadeout 3.5s 3.5s;
-            animation: fadein 1.5s, fadeout 3.5s 3.5s;
-        }
-
-        /* Animations to fade the snackbar in and out */
-
-        @-webkit-keyframes fadein {
-            from {
-                bottom: 0;
-                opacity: 0;
-            }
-            to {
-                bottom: 30px;
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadein {
-            from {
-                bottom: 0;
-                opacity: 0;
-            }
-            to {
-                bottom: 30px;
-                opacity: 1;
-            }
-        }
-
-        @-webkit-keyframes fadeout {
-            from {
-                bottom: 30px;
-                opacity: 1;
-            }
-            to {
-                bottom: 0;
-                opacity: 0;
-            }
-        }
-
-        @keyframes fadeout {
-            from {
-                bottom: 30px;
-                opacity: 1;
-            }
-            to {
-                bottom: 0;
-                opacity: 0;
-            }
-        }
-    </style>
     <script>
-        var showJsErrorsMessage = "Unexpected error :( please tweet the following @your-maintainer-handle-here: ";
+        //////////
+        // This is an error handler to show JS errors to the user.
+        // More info at https://github.com/ubershmekel/show-js-errors
+        //////////
+        var showJsErrorsMessage = "Unexpected error :( please tweet the following to @your-maintainer-handle-here: ";
         function showAlert(message) {
             if (!document.body) {
                 // toasts don't work before the body exists, so we postpone the toast.
@@ -134,11 +45,12 @@
             // Make sure this delay fits the css transition duration
             var eraseElementDelay = 6500;
             setTimeout(function () {
-                elem.className = elem.className.replace("show", "");
+                //elem.className = elem.className.replace("show", "");
+                elem.parentNode.removeChild(elem);
             }, eraseElementDelay);
             containerElem.appendChild(elem);
         }
-
+    
         window.onerror = function (msg, url, linenumber) {
             // Tell users when errors occur and log on google analytics
             // This is useful to see syntax errors in loaded scripts.
@@ -155,13 +67,104 @@
             // report on dev console too
             return false;
         }
-
+    
         window.addEventListener("unhandledrejection", function (event) {
             // Handle unhandled promises, these should probably just throw, yet here we are.
             showAlert(showJsErrorsMessage + " Broken promise - " + event.reason);
             //throw 'broken promise: ' + event.reason
         });
     </script>
+    <style>
+        #snackAlertsContainer {
+            position: fixed;
+            /* Sit on top of the screen */
+            z-index: 1;
+            /* Add a z-index if needed */
+            bottom: 0;
+            right: 0;
+            /* 30px from the bottom */
+            width: 0;
+        }
+    
+        .snackAlert {
+            display: none;
+            /* Hidden by default. Visible on click */
+            margin: auto;
+            position: relative;
+            right: 54vw;
+            width: 50vw;
+            bottom: 20px;
+            /* `bottom` is tied to the animation below */
+            min-width: 250px;
+            /* Set a default minimum width */
+            margin-bottom: 16px;
+            background-color: #933;
+            /* Black background color */
+            color: #fff;
+            /* White text color */
+            text-align: center;
+            /* Centered text */
+            border-radius: 2px;
+            padding: 16px;
+        }
+    
+        /* Show the snackbar when clicking on a button (class added with JavaScript) */
+    
+        .snackAlert.show {
+            display: block;
+            /* Show the snackbar */
+            /* Add animation: Take 0.5 seconds to fade in and out the snackbar. 
+                    However, delay the fade out process for 2.5 seconds */
+            -webkit-animation: fadein 1.5s, fadeout 3.5s 3.5s;
+            animation: fadein 1.5s, fadeout 3.5s 3.5s;
+        }
+    
+        /* Animations to fade the snackbar in and out */
+    
+        @-webkit-keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+            to {
+                bottom: 20px;
+                opacity: 1;
+            }
+        }
+    
+        @keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+            to {
+                bottom: 20px;
+                opacity: 1;
+            }
+        }
+    
+        @-webkit-keyframes fadeout {
+            from {
+                bottom: 20px;
+                opacity: 1;
+            }
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+    
+        @keyframes fadeout {
+            from {
+                bottom: 20px;
+                opacity: 1;
+            }
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+    </style>
     <!-- end the snippet -->
 
     <link rel="stylesheet" href="index.css">
@@ -188,10 +191,19 @@
         </li>
     </ul>
 
+    <script>
+        function funky() {
+            JSON.parse('');
+        }
+    </script>
+
     <h3>What does it look like when an error occurs?</h3>
     <ul>
         <li>
-            <button onclick="calling-an-undefined-function-woops();">Try out an error</button>
+            <button onclick="funky();">Try out a failed JSON parse</button>
+        </li>
+        <li>
+            <button onclick="callingUndefined();">Try out an undefined function</button>
         </li>
         <li>
             <button onclick="Promise.reject(new Error('woops'));">Try out a promise rejection</button>
@@ -201,7 +213,8 @@
     <h3>This is suboptimal</h3>
     <ul>
         <li>
-            Please <a href="https://github.com/ubershmekel/show-js-errors">open an issue or pull request on github</a>.
+            Please
+            <a href="https://github.com/ubershmekel/show-js-errors">open an issue or pull request on github</a>.
         </li>
     </ul>
 
