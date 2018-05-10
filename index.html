@@ -50,7 +50,7 @@
             }, eraseElementDelay);
             containerElem.appendChild(elem);
         }
-    
+
         window.onerror = function (msg, url, linenumber) {
             // Tell users when errors occur and log on google analytics
             // This is useful to see syntax errors in loaded scripts.
@@ -67,7 +67,7 @@
             // report on dev console too
             return false;
         }
-    
+
         window.addEventListener("unhandledrejection", function (event) {
             // Handle unhandled promises, these should probably just throw, yet here we are.
             showAlert(showJsErrorsMessage + " Broken promise - " + event.reason);
@@ -85,7 +85,7 @@
             /* 30px from the bottom */
             width: 0;
         }
-    
+
         .snackAlert {
             display: none;
             /* Hidden by default. Visible on click */
@@ -107,9 +107,9 @@
             border-radius: 2px;
             padding: 16px;
         }
-    
+
         /* Show the snackbar when clicking on a button (class added with JavaScript) */
-    
+
         .snackAlert.show {
             display: block;
             /* Show the snackbar */
@@ -118,9 +118,9 @@
             -webkit-animation: fadein 1.5s, fadeout 3.5s 3.5s;
             animation: fadein 1.5s, fadeout 3.5s 3.5s;
         }
-    
+
         /* Animations to fade the snackbar in and out */
-    
+
         @-webkit-keyframes fadein {
             from {
                 bottom: 0;
@@ -131,7 +131,7 @@
                 opacity: 1;
             }
         }
-    
+
         @keyframes fadein {
             from {
                 bottom: 0;
@@ -142,7 +142,7 @@
                 opacity: 1;
             }
         }
-    
+
         @-webkit-keyframes fadeout {
             from {
                 bottom: 20px;
@@ -153,7 +153,7 @@
                 opacity: 0;
             }
         }
-    
+
         @keyframes fadeout {
             from {
                 bottom: 20px;
@@ -183,10 +183,11 @@
     <h3>Why show Javascript errors to users?</h3>
     <ul>
         <li>
-            Because otherwise they'll be needlessly waiting for your app to do what it was supposed to do.
+            Without showing an error your users will just wait for your app to do anything. An error may cause them to refresh or report
+            the bug.
         </li>
         <li>
-            You might've forgotten to implement a specific error handler that makes for a better interaction.
+            You might've forgotten to implement a specific error handler. This toast is helpful during development and staging too.
         </li>
     </ul>
 
@@ -220,14 +221,25 @@
     <h3>There must be a better way</h3>
     <ul>
         <li>
-            If you want to track your errors on a dashboard,
-            which is the right thing to do if you have a site with a lot of visitors,
-            I recommend <a href="https://github.com/GoogleCloudPlatform/stackdriver-errors-js">Google's Stackdriver JS Error Reporting</a>.
+            If you want to track your errors on a dashboard, which is the right thing to do if you have a site with a lot of visitors,
+            I recommend
+            <a href="https://github.com/GoogleCloudPlatform/stackdriver-errors-js">Google's Stackdriver JS Error Reporting</a>.
         </li>
         <li>
-                If you want a more robust toasts library, then there are many options like <a href="http://alertifyjs.com/">Alertify</a>, <a href="http://codeseven.github.io/toastr/">Toastr</a>, <a href="https://www.polonel.com/snackbar/">Polonel Snackbar</a>.
-            </li>
-        </ul>
+            If you want a more robust toasts library, then there are many options like
+            <a href="http://alertifyjs.com/">Alertify</a>,
+            <a href="http://codeseven.github.io/toastr/">Toastr</a>,
+            <a href="https://www.polonel.com/snackbar/">Polonel Snackbar</a>.
+        </li>
+    </ul>
+
+    <h3>Why can't I npm install this?</h3>
+    <ul>
+        <li>
+            Because you need to paste it first into your `head` tag.
+            I'm not sure how to arrange for that with webkit and other build systems, PRs would be welcome.
+        </li>
+    </ul>
 
 </body>
 
