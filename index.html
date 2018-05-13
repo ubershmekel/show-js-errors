@@ -20,8 +20,9 @@
         //////////
         // This is an error handler to show JS errors to the user.
         // More info at https://github.com/ubershmekel/show-js-errors
+        // Please modify `showJsErrorsMessage` to suit your needs.
         //////////
-        var showJsErrorsMessage = "Unexpected error :( please tweet the following to @your-maintainer-handle-here: ";
+        var showJsErrorsMessage = "Unexpected error :( ";
         function showAlert(message) {
             if (!document.body) {
                 // toasts don't work before the body exists, so we postpone the toast.
@@ -41,13 +42,31 @@
             elem.innerHTML = message;
             // Add the "show" class to DIV
             elem.className = "snackAlert show";
-            // After a delay, remove the show class from DIV
-            // Make sure this delay fits the css transition duration
-            var eraseElementDelay = 6500;
-            setTimeout(function () {
-                //elem.className = elem.className.replace("show", "");
-                elem.parentNode.removeChild(elem);
-            }, eraseElementDelay);
+            elem.onmouseenter = function() {
+                if (hiderTimeout) {
+                    clearTimeout(hiderTimeout);
+                }
+            }
+            elem.onmouseleave = function() {
+                scheduleRemoval();
+            }
+
+            var hiderTimeout = 0;
+            function scheduleRemoval() {
+                var timeBeforeFadeoutStartsMs = 3000;
+                hiderTimeout = setTimeout(function() {
+                    // Start fading element out
+                    // Make sure `fadeoutDuration` fits the css transition duration
+                    var fadeoutDuration = 1000;
+                    elem.className = elem.className.replace("show", "hiding");
+                        setTimeout(function () {
+                        // Remove the element entirely
+                        elem.parentNode.removeChild(elem);
+                    }, fadeoutDuration);
+                }, timeBeforeFadeoutStartsMs);
+            }
+
+            scheduleRemoval();
             containerElem.appendChild(elem);
         }
 
@@ -106,17 +125,28 @@
             /* Centered text */
             border-radius: 2px;
             padding: 16px;
+            opacity: 1;
+
+            -webkit-transition: opacity 1s ease-in-out;
+            -moz-transition: opacity 1s ease-in-out;
+            -ms-transition: opacity 1s ease-in-out;
+            -o-transition: opacity 1s ease-in-out;
+            transition: opacity 1s ease-in-out;
         }
 
         /* Show the snackbar when clicking on a button (class added with JavaScript) */
-
+        .snackAlert.hiding {
+            display: block;
+            opacity: 0;
+        }
         .snackAlert.show {
             display: block;
+            opacity: 1;
             /* Show the snackbar */
             /* Add animation: Take 0.5 seconds to fade in and out the snackbar. 
                     However, delay the fade out process for 2.5 seconds */
-            -webkit-animation: fadein 1.5s, fadeout 3.5s 3.5s;
-            animation: fadein 1.5s, fadeout 3.5s 3.5s;
+            -webkit-animation: fadein 1.5s;
+            animation: fadein 1.5s;
         }
 
         /* Animations to fade the snackbar in and out */
