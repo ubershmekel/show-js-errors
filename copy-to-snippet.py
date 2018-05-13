@@ -2,9 +2,11 @@
 """
 I usually develop and test on `index.html` then use this script to copy
 frome there to `snippet.html`.
-"""
-# #from lxml import etree, html
 
+Note to caculate the min gzip size use:
+    html-minifier --minify-js 1 --minify-css 1 --collapse-whitespace snippet.html | gzip | wc
+"""
+import subprocess
 
 html = open("index.html").read()
 
@@ -20,5 +22,11 @@ snippet = html[start_index + len(start_tag):end_index].strip('\r\n')
 #document_root = html.fromstring(snippet)
 #snippet = etree.tostring(document_root, encoding='unicode', pretty_print=True)
 
-open('snippet.html', 'w').write(snippet)
+OUT_FILE = 'snippet.html'
+OUT_MIN_FILE = 'snippet.min.html'
+open(OUT_FILE, 'w').write(snippet)
 print("Saved snippet length: %d" % len(snippet))
+
+subprocess.check_call(
+    'html-minifier --minify-js 1 --minify-css 1 --collapse-whitespace ' +
+    OUT_FILE + ' > ' + OUT_MIN_FILE, shell=True)

@@ -1,4 +1,6 @@
-<html>
+<!doctype html>
+<html lang=en-us>
+<meta charset=utf-8>
 
 <head>
     <title>Show Javascript Errors To Users</title>
@@ -16,7 +18,7 @@
 
 
     <!-- start the snippet -->
-    <script>
+    <script type="text/javascript">
         //////////
         // This is an error handler to show JS errors to the user.
         // More info at https://github.com/ubershmekel/show-js-errors
@@ -42,24 +44,29 @@
             elem.innerHTML = message;
             // Add the "show" class to DIV
             elem.className = "snackAlert show";
-            elem.onmouseenter = function() {
-                if (hiderTimeout) {
-                    clearTimeout(hiderTimeout);
+            elem.onmouseenter = function () {
+                if (hiderTimeoutId) {
+                    clearTimeout(hiderTimeoutId);
+                    hiderTimeoutId = 0;
                 }
             }
-            elem.onmouseleave = function() {
+            elem.onmouseleave = function () {
                 scheduleRemoval();
             }
 
-            var hiderTimeout = 0;
+            var hiderTimeoutId = 0;
             function scheduleRemoval() {
                 var timeBeforeFadeoutStartsMs = 3000;
-                hiderTimeout = setTimeout(function() {
+                if (hiderTimeoutId) {
+                    // Oddly this can happen when mousing over quickly.
+                    return;
+                }
+                hiderTimeoutId = setTimeout(function () {
                     // Start fading element out
                     // Make sure `fadeoutDuration` fits the css transition duration
                     var fadeoutDuration = 1000;
                     elem.className = elem.className.replace("show", "hiding");
-                        setTimeout(function () {
+                    setTimeout(function () {
                         // Remove the element entirely
                         elem.parentNode.removeChild(elem);
                     }, fadeoutDuration);
@@ -71,19 +78,12 @@
         }
 
         window.onerror = function (msg, url, linenumber) {
-            // Tell users when errors occur and log on google analytics
-            // This is useful to see syntax errors in loaded scripts.
-            // http://stackoverflow.com/questions/2604976/javascript-how-to-display-script-errors-in-a-popup-alert/2604997#2604997
+            // Tell users when errors occur
+            // Based on http://stackoverflow.com/questions/2604976/javascript-how-to-display-script-errors-in-a-popup-alert/2604997#2604997
+            // Note that if you get the `msg` as "Script error." that's because of cross-origin scrubbing,
+            // see: https://stackoverflow.com/questions/19141195/how-can-we-listen-for-errors-that-do-not-trigger-window-onerror/19141439#19141439
             showAlert(showJsErrorsMessage + msg)
-            /*
-            // Use this to report errors on google analytics
-            // but don't forget to add a protection against `ga` being undefined
-            var errDetails = msg + '\nURL: ' + url + '\nLine Number: '+ linenumber;
-            ga('send', 'exception', {
-                'exDescription': errDetails,
-                'exFatal': false
-            });*/
-            // report on dev console too
+            // `return false` to report on dev console too
             return false;
         }
 
@@ -93,15 +93,14 @@
             //throw 'broken promise: ' + event.reason
         });
     </script>
-    <style>
+    <style type="text/css">
         #snackAlertsContainer {
-            position: fixed;
             /* Sit on top of the screen */
-            z-index: 1;
+            position: fixed;
             /* Add a z-index if needed */
+            z-index: 1;
             bottom: 0;
             right: 0;
-            /* 30px from the bottom */
             width: 0;
         }
 
@@ -112,17 +111,12 @@
             position: relative;
             right: 54vw;
             width: 50vw;
+            /* `bottom` is tied to the animation `fadein` */
             bottom: 20px;
-            /* `bottom` is tied to the animation below */
-            min-width: 250px;
-            /* Set a default minimum width */
             margin-bottom: 16px;
             background-color: #933;
-            /* Black background color */
             color: #fff;
-            /* White text color */
             text-align: center;
-            /* Centered text */
             border-radius: 2px;
             padding: 16px;
             opacity: 1;
@@ -135,10 +129,12 @@
         }
 
         /* Show the snackbar when clicking on a button (class added with JavaScript) */
+
         .snackAlert.hiding {
             display: block;
             opacity: 0;
         }
+
         .snackAlert.show {
             display: block;
             opacity: 1;
@@ -172,28 +168,6 @@
                 opacity: 1;
             }
         }
-
-        @-webkit-keyframes fadeout {
-            from {
-                bottom: 20px;
-                opacity: 1;
-            }
-            to {
-                bottom: 0;
-                opacity: 0;
-            }
-        }
-
-        @keyframes fadeout {
-            from {
-                bottom: 20px;
-                opacity: 1;
-            }
-            to {
-                bottom: 0;
-                opacity: 0;
-            }
-        }
     </style>
     <!-- end the snippet -->
 
@@ -204,27 +178,71 @@
     <h1>Show a toast when a Javascript error occurs</h1>
 
     <!-- The new "fork me on github" from http://tholman.com/github-corners/ -->
-    <a href="https://github.com/ubershmekel/show-js-errors" class="github-corner" aria-label="View source on Github"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <a href="https://github.com/ubershmekel/show-js-errors" class="github-corner" aria-label="View source on Github">
+        <svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;"
+            aria-hidden="true">
+            <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+            <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+                fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+            <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+                fill="currentColor" class="octo-body"></path>
+        </svg>
+    </a>
+    <style>
+        .github-corner:hover .octo-arm {
+            animation: octocat-wave 560ms ease-in-out
+        }
+
+        @keyframes octocat-wave {
+            0%,
+            100% {
+                transform: rotate(0)
+            }
+            20%,
+            60% {
+                transform: rotate(-25deg)
+            }
+            40%,
+            80% {
+                transform: rotate(10deg)
+            }
+        }
+
+        @media (max-width:500px) {
+            .github-corner:hover .octo-arm {
+                animation: none
+            }
+            .github-corner .octo-arm {
+                animation: octocat-wave 560ms ease-in-out
+            }
+        }
+    </style>
 
     <h3>How?</h3>
     <ul>
         <li>
-            <a href="https://raw.githubusercontent.com/ubershmekel/show-js-errors/gh-pages/snippet.html">Paste this</a> into your &lt;head&gt;
+            <a href="https://raw.githubusercontent.com/ubershmekel/show-js-errors/gh-pages/snippet.html">Paste this</a> (or
+            <a href="https://raw.githubusercontent.com/ubershmekel/show-js-errors/gh-pages/snippet.min.html">minified</a>) into your
+            <span class="highlight">&lt;head&gt;</span>
         </li>
     </ul>
 
     <h3>Why?</h3>
     <ul>
         <li>
-            An unhandled error could pause execution, causing users to needlessly wait bewildered.
-            A visible error may cause them to refresh the page or report the bug.
+            An unhandled error could pause execution, causing users to needlessly wait bewildered. A visible error may prompt them to
+            refresh the page, report the bug or open the dev console.
         </li>
         <li>
-            You might've forgotten to implement a specific error handler. This toast is helpful during development and staging too.
+            You might've forgotten to implement a specific error handler, included the wrong script, had network issues, etc.
+        </li>
+        <li>
+            You won't get the stack trace but you'll instantly know to look at the console. During development I sometimes stare at a
+            page wondering why something isn't happening. An error toast removes the wait and I immediately start debugging.
         </li>
     </ul>
 
-    <script>
+    <script type="text/javascript">
         function funky() {
             JSON.parse('');
         }
@@ -255,7 +273,8 @@
     <ul>
         <li>
             If you want to track your errors on a dashboard, which is the right thing to do if you have a site with a lot of visitors,
-            I recommend
+            I'm told
+            <a href="https://rollbar.com/">rollbar</a> works well and I've enjoyed using
             <a href="https://github.com/GoogleCloudPlatform/stackdriver-errors-js">Google's Stackdriver JS Error Reporting</a>.
         </li>
         <li>
@@ -264,13 +283,16 @@
             <a href="http://codeseven.github.io/toastr/">Toastr</a>,
             <a href="https://www.polonel.com/snackbar/">Polonel Snackbar</a>.
         </li>
+        <li>
+            It still might make sense to toast...
+        </li>
     </ul>
 
     <h3>Why can't I npm install this?</h3>
     <ul>
         <li>
-            Because you need to paste it first into your `head` tag.
-            I'm not sure how to arrange for that with webpack and other build systems, PRs would be welcome.
+            Because you need to paste it first into your `head` tag. I'm not sure how to arrange for that with webpack and other build
+            systems, PRs would be welcome.
         </li>
     </ul>
 

@@ -100,3 +100,7 @@ h3 {
     color: #777;
     margin-top: 1em;
 }
+
+.highlight {
+    font-weight: bold;
+}
